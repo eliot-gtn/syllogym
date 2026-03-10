@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=68"]
-build-backend = "setuptools.backends.legacy:build"
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "syllogym-env"
@@ -9,13 +9,17 @@ description = "SylloGym: Legal Syllogistic Reasoning Environment for RLVR"
 requires-python = ">=3.10"
 dependencies = [
     "openenv-core>=0.2.1",
-    "datasets>=2.19.0",
+    "datasets>=2.19.0,<3.0.0",
     "huggingface_hub>=0.23.0",
-    "fastapi",
-    "uvicorn",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
     "pydantic>=2.0",
 ]
 
-[tool.setuptools.packages.find]
-where = [".."]
-include = ["syllogym_env*"]
+[project.scripts]
+server = "syllogym_env.server.app:main"
+
+[tool.setuptools]
+include-package-data = true
+packages = ["syllogym_env", "syllogym_env.server"]
+package-dir = {"syllogym_env" = ".", "syllogym_env.server" = "server"}

@@ -45,6 +45,7 @@ except ImportError:
 #   "valid_answers" : list of accepted answers (case-insensitive match)
 #   "rule"          : explicit rule text shown to the model in every prompt
 #   "question"      : question template shown to the model
+#   "text_field"    : field name in LegalBench containing the facts (default: "text")
 
 TASK_REGISTRY: list[dict] = [
     {
@@ -147,6 +148,7 @@ TASK_REGISTRY: list[dict] = [
         "difficulty": 2,
         "task_type": "binary",
         "valid_answers": ["UCC", "Common Law"],
+        "text_field": "contract",
         "rule": (
             "The Uniform Commercial Code (UCC) Article 2 governs contracts for the SALE OF "
             "GOODS — tangible, movable personal property. The Common Law of contracts governs "
@@ -234,20 +236,22 @@ _DIFFICULTY_WEIGHTS: list[float] = [
 # LegalBench dataset loader
 # ---------------------------------------------------------------------------
 
-def _load_legalbench_examples(task_name: str) -> list[dict]:
+def _load_legalbench_examples(task_name: str, text_field: str = "text") -> list[dict]:
     """Load examples from LegalBench (nguha/legalbench) for a given task."""
     try:
         from datasets import load_dataset
-        ds = load_dataset("nguha/legalbench", task_name, split="test")
+        ds = load_dataset(
+            "nguha/legalbench", task_name, split="test", trust_remote_code=True
+        )
         examples = []
         for item in ds:
-            # LegalBench format: {"text": "...", "label": "...", "idx": ...}
-            examples.append({
-                "text": item.get("text", ""),
-                "label": str(item.get("label", "")).strip(),
-            })
+            # LegalBench format: {"text"/"contract"/...: "...", "answer": "..."}
+            text = item.get(text_field) or item.get("text", "")
+            label = str(item.get("answer", "")).strip()
+            if text and label:
+                examples.append({"text": text, "label": label})
         return examples
-    except Exception as e:
+    except Exception:
         # Fallback to empty list if dataset unavailable
         return []
 
@@ -258,7 +262,9 @@ _DATASET_CACHE: dict[str, list[dict]] = {}
 
 def _get_examples(task_name: str) -> list[dict]:
     if task_name not in _DATASET_CACHE:
-        _DATASET_CACHE[task_name] = _load_legalbench_examples(task_name)
+        task = _TASK_BY_NAME.get(task_name, {})
+        text_field = task.get("text_field", "text")
+        _DATASET_CACHE[task_name] = _load_legalbench_examples(task_name, text_field)
     return _DATASET_CACHE[task_name]
 
 

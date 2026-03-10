@@ -63,11 +63,16 @@ class SylloGymEnv(EnvClient[SylloAction, SylloObservation, SylloState]):
 
     def _parse_result(self, payload: dict) -> StepResult[SylloObservation]:
         obs_data = payload.get("observation", {})
+        reward = payload.get("reward")
+        done = bool(payload.get("done", True))
+        # Mirror reward/done into the observation for convenience
+        obs_data["reward"] = reward
+        obs_data["done"] = done
         obs = SylloObservation(**obs_data)
         return StepResult(
             observation=obs,
-            reward=payload.get("reward"),
-            done=bool(payload.get("done", True)),
+            reward=reward,
+            done=done,
         )
 
     def _parse_state(self, payload: dict) -> SylloState:
