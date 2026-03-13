@@ -3,15 +3,17 @@ name: syllogym_env
 type: space
 runtime: fastapi
 app: server.app:app
-port: 8000
+port: 7860
 description: >
-  SylloGym: Legal Syllogistic Reasoning Environment.
-  Trains LLMs to apply deductive reasoning on LegalBench tasks.
-  The model receives a legal rule + case facts and must derive the correct
-  legal conclusion (Yes/No or multi-class).
+  SylloGym: Multi-dataset Deductive Reasoning Environment.
+  Trains LLMs to apply strict logical deduction across 6 datasets and 20 tasks:
+  LegalBench, Knights & Knaves, ProofWriter, FOLIO, RuleBreakers, FOL-NLI.
+  The model receives premises/rules and must derive the correct conclusion.
 tags:
-  - legal
+  - openenv
   - reasoning
   - rlvr
   - legalbench
   - grpo
+  - deductive-reasoning
+  - first-order-logic
