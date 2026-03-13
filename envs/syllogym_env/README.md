@@ -67,7 +67,7 @@ Pass optional parameters to `reset()` to control task selection:
 ```python
 from syllogym_env import SylloGymEnv, SylloAction
 
-env = SylloGymEnv(base_url="https://huggingface.co/spaces/eliot-gtn/syllogym-env")
+env = SylloGymEnv(base_url="https://huggingface.co/spaces/farffadet/syllogym-env")
 env.connect()
 
 result = env.reset(task_mode="mixed")
