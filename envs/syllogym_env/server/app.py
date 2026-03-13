@@ -23,6 +23,7 @@ app = create_app(
     SylloAction,
     SylloObservation,
     env_name="syllogym_env",
+    max_concurrent_envs=10,
 )
 
 

@@ -77,6 +77,9 @@ class SylloGymEnvironment(Environment):
         >>> env = SylloGymEnvironment(task_mode="single", task_name="knights_knaves")
     """
 
+    # Each session gets its own environment instance with independent state
+    SUPPORTS_CONCURRENT_SESSIONS = True
+
     def __init__(
         self,
         task_mode: str = "mixed",
