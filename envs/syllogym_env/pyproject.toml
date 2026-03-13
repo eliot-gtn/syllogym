@@ -27,9 +27,8 @@ packages = [
     "syllogym_env.server.core",
     "syllogym_env.server.drivers",
 ]
-package-dir = {
-    "syllogym_env" = ".",
-    "syllogym_env.server" = "server",
-    "syllogym_env.server.core" = "server/core",
-    "syllogym_env.server.drivers" = "server/drivers",
-}
+[tool.setuptools.package-dir]
+"syllogym_env" = "."
+"syllogym_env.server" = "server"
+"syllogym_env.server.core" = "server/core"
+"syllogym_env.server.drivers" = "server/drivers"
