@@ -1,5 +1,5 @@
 """SylloGym environment server components."""
 
-from .syllogym_environment import SylloGymEnvironment
+from .core.environment import SylloGymEnvironment
 
 __all__ = ["SylloGymEnvironment"]

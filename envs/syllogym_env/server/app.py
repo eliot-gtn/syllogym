@@ -12,11 +12,11 @@ Usage:
 try:
     from openenv.core.env_server import create_app
     from syllogym_env.models import SylloAction, SylloObservation
-    from syllogym_env.server.syllogym_environment import SylloGymEnvironment
+    from syllogym_env.server.core.environment import SylloGymEnvironment
 except ImportError:
     from openenv.core.env_server import create_app
     from ..models import SylloAction, SylloObservation
-    from .syllogym_environment import SylloGymEnvironment
+    from .core.environment import SylloGymEnvironment
 
 app = create_app(
     SylloGymEnvironment,

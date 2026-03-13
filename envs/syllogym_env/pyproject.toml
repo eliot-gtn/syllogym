@@ -21,5 +21,15 @@ server = "syllogym_env.server.app:main"
 
 [tool.setuptools]
 include-package-data = true
-packages = ["syllogym_env", "syllogym_env.server"]
-package-dir = {"syllogym_env" = ".", "syllogym_env.server" = "server"}
+packages = [
+    "syllogym_env",
+    "syllogym_env.server",
+    "syllogym_env.server.core",
+    "syllogym_env.server.drivers",
+]
+package-dir = {
+    "syllogym_env" = ".",
+    "syllogym_env.server" = "server",
+    "syllogym_env.server.core" = "server/core",
+    "syllogym_env.server.drivers" = "server/drivers",
+}
