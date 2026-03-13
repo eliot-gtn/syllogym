@@ -30,10 +30,19 @@ from ..drivers.legalbench import LegalBenchDriver
 from ..drivers.knights_knaves import KnightsKnavesDriver
 from ..drivers.proofwriter import ProofWriterDriver
 from ..drivers.folio import FOLIODriver
+from ..drivers.rulebreakers import RuleBreakersDriver
+from ..drivers.fol_nli import FOLNLIDriver
 
 
 def _default_drivers() -> list[BaseDriver]:
-    return [LegalBenchDriver(), KnightsKnavesDriver(), ProofWriterDriver(), FOLIODriver()]
+    return [
+        LegalBenchDriver(),
+        KnightsKnavesDriver(),
+        ProofWriterDriver(),
+        FOLIODriver(),
+        RuleBreakersDriver(),
+        FOLNLIDriver(),
+    ]
 
 
 class SylloGymEnvironment(Environment):
