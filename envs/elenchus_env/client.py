@@ -51,7 +51,7 @@ from openenv.core.env_server.mcp_types import CallToolAction, CallToolObservatio
 from .models import ElenchusObservation, ElenchusState
 
 
-class ElenchusEnv(EnvClient[CallToolAction, CallToolObservation, ElenchusState]):
+class ElenchusEnv(EnvClient[CallToolAction, ElenchusObservation, ElenchusState]):
     """
     Client for the ElenchusEnv multi-turn agentic reasoning environment.
 
@@ -78,19 +78,51 @@ class ElenchusEnv(EnvClient[CallToolAction, CallToolObservation, ElenchusState])
             "arguments": action.arguments,
         }
 
-    def _parse_result(self, payload: dict) -> StepResult[CallToolObservation]:
+    def _parse_result(self, payload: dict) -> StepResult[ElenchusObservation]:
         obs_data = payload.get("observation", {})
         reward = payload.get("reward")
         done = bool(payload.get("done", False))
-        obs = CallToolObservation(
-            tool_name=obs_data.get("tool_name", ""),
-            result=obs_data.get("result"),
-        )
-        return StepResult(
-            observation=obs,
-            reward=reward,
-            done=done,
-        )
+
+        # After a tool step the server returns a raw CallToolObservation
+        # (tool_name + result). Wrap it back into our ElenchusObservation.
+        if "result" in obs_data and "problem" not in obs_data:
+            mcp_result = obs_data.get("result")
+            tool_text = None
+            if mcp_result and isinstance(mcp_result.get("content"), list):
+                contents = mcp_result["content"]
+                if contents:
+                    tool_text = contents[0].get("text")
+
+            # MCPEnvironment doesn't propagate reward/done for tool steps.
+            # Infer them from submit_answer tool result text.
+            tool_name = obs_data.get("tool_name")
+            if tool_name == "submit_answer" and tool_text:
+                done = True
+                reward = 1.0 if "Correct!" in tool_text else 0.0
+
+            obs = ElenchusObservation(
+                tool_name=tool_name,
+                tool_result=tool_text,
+                reward=reward,
+                done=done,
+            )
+        else:
+            obs_kwargs: dict = {
+                "problem": obs_data.get("problem", ""),
+                "valid_answers": obs_data.get("valid_answers", []),
+                "steps_used": obs_data.get("steps_used", 0),
+                "max_steps": obs_data.get("max_steps", 8),
+                "derived_facts": obs_data.get("derived_facts", []),
+                "reward": reward,
+                "done": done,
+            }
+            if obs_data.get("task_name") is not None:
+                obs_kwargs["task_name"] = obs_data["task_name"]
+            if obs_data.get("difficulty") is not None:
+                obs_kwargs["difficulty"] = obs_data["difficulty"]
+            obs = ElenchusObservation(**obs_kwargs)
+
+        return StepResult(observation=obs, reward=reward, done=done)
 
     def _parse_state(self, payload: dict) -> ElenchusState:
         return ElenchusState(
