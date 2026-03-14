@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "elenchus-env"
+version = "0.1.0"
+description = "ElenchusEnv: Multi-turn Agentic Deductive Reasoning Environment"
+requires-python = ">=3.10"
+dependencies = [
+    "openenv-core>=0.2.1",
+    "fastmcp>=0.1.0",
+    "datasets>=2.19.0,<3.0.0",
+    "huggingface_hub>=0.23.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "pydantic>=2.0",
+]
+
+[project.scripts]
+server = "elenchus_env.server.app:main"
+
+[tool.setuptools]
+include-package-data = true
+packages = [
+    "elenchus_env",
+    "elenchus_env.server",
+    "elenchus_env.server.core",
+    "elenchus_env.server.drivers",
+]
+[tool.setuptools.package-dir]
+"elenchus_env" = "."
+"elenchus_env.server" = "server"
+"elenchus_env.server.core" = "server/core"
+"elenchus_env.server.drivers" = "server/drivers"

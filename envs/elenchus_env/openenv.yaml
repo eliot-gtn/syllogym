@@ -1,0 +1,20 @@
+spec_version: 1
+name: elenchus_env
+type: space
+runtime: fastapi
+app: server.app:app
+port: 7860
+description: >
+  ElenchusEnv: Multi-turn Agentic Deductive Reasoning Environment.
+  Agents solve logical syllogism problems using MCP tools (check_rule,
+  derive, get_facts, submit_answer) over up to 8 turns.
+  Datasets: ProofWriter (d2-d5), Knights & Knaves, FOLIO, FOL-NLI, LegalBench.
+tags:
+  - openenv
+  - reasoning
+  - rlvr
+  - mcp
+  - agentic
+  - deductive-reasoning
+  - first-order-logic
+  - grpo
