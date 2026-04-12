@@ -205,3 +205,14 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# relevant repos
+relevant_repos/
+# generated enriched episodes (produced by scripts/enrich_episodes.py)
+enriched/
+notebooks/eval_*_partial.json
+notebooks/checkpoint-merged/
+# local archive — not for public release
+old/
+# notebook runtime logs
+notebooks/*.log
