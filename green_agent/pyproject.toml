@@ -1,0 +1,23 @@
+[project]
+name = "syllogym-green-agent"
+version = "1.0.0"
+description = "SylloGym Green Agent — A2A wrapper for multi-turn legal reasoning evaluation"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "a2a-sdk[http-server]>=0.3.20",
+    "pydantic>=2.12.5",
+    "uvicorn>=0.38.0",
+    "httpx>=0.28.0",
+    "openenv-core>=0.2.1",
+]
+
+[project.scripts]
+syllogym-green = "server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
