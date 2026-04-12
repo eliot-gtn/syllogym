@@ -1,0 +1,70 @@
+spec_version: 1
+name: syllogym_env
+type: space
+runtime: fastapi
+app: server.app:app
+port: 7860
+description: >
+  SylloGym: Multi-turn Judge Agent legal reasoning environment.
+  The agent plays a judge who discovers case facts progressively turn by turn,
+  including plot twists that may reverse the previous conclusion.
+  12 procedural generators across US law domains — diversity jurisdiction, UCC,
+  Miranda rights, consideration, mens rea, Terry stop, SARA § 7703, telemarketing
+  sales rule, qualifying child/relative, Statute of Frauds, hearsay (FRE 801-807),
+  and adverse possession (OCEAN test).
+  All ground truth is computed by deterministic Python verifiers.
+  Action: {"answer": "Yes" | "No"}
+tasks:
+  - diversity_2
+  - diversity_3
+  - diversity_4
+  - diversity_5
+  - ucc_2
+  - ucc_3
+  - ucc_4
+  - miranda_1
+  - miranda_2
+  - miranda_3
+  - miranda_4
+  - miranda_5
+  - consideration_1
+  - consideration_2
+  - consideration_3
+  - consideration_4
+  - mens_rea_1
+  - mens_rea_2
+  - mens_rea_3
+  - terry_1
+  - terry_2
+  - terry_3
+  - terry_4
+  - sara_s7703_1
+  - sara_s7703_2
+  - sara_s7703_3
+  - tsr_2
+  - tsr_3
+  - tsr_4
+  - qc_1
+  - qc_2
+  - qc_3
+  - qr_1
+  - qr_2
+  - qr_3
+  - sof_2
+  - sof_3
+  - sof_4
+  - hearsay_2
+  - hearsay_3
+  - hearsay_4
+  - adverse_possession_2
+  - adverse_possession_3
+  - adverse_possession_4
+  - adverse_possession_5
+tags:
+  - openenv
+  - reasoning
+  - rlvr
+  - grpo
+  - multi-turn
+  - legal-reasoning
+  - law
