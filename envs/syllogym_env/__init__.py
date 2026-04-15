@@ -1,28 +1,40 @@
 """
 SylloGym — Multi-turn Legal Reasoning Environment.
 
-JudgeEnv: the agent plays a judge who receives case facts turn by turn
-and must revise their ruling as the case evolves. Twelve domains of US
-law, procedurally generated episodes, deterministic Python verifiers.
+A judge receives case facts turn by turn and must revise their ruling as the
+case evolves. Twelve domains of US law, procedurally generated episodes,
+deterministic Python verifiers.
 
-Example (standalone):
-    >>> from syllogym_env import SylloGymEnv
-    >>> env = SylloGymEnv()
+Example (hosted Space, async):
+    >>> import asyncio
+    >>> from syllogym_env import JudgeAction, JudgeEnv
+    >>>
+    >>> async def main():
+    ...     async with JudgeEnv(base_url="https://farffadet-syllogym-env.hf.space") as env:
+    ...         result = await env.reset()
+    ...         while not result.observation.done:
+    ...             result = await env.step(JudgeAction(answer=result.observation.valid_answers[0]))
+    ...         print("Episode reward:", result.reward)
+    >>>
+    >>> asyncio.run(main())
+
+Example (local, no server):
+    >>> from syllogym_env import LocalJudgeEnv
+    >>> env = LocalJudgeEnv()
     >>> obs = env.reset()
-    >>> result = env.review_document("arrest_report")
-    >>> result = env.conclude("Yes")
-    >>> print(env.reward)
-
-Example (MCP via OpenEnv client):
-    >>> from openenv.core.mcp_client import MCPToolClient
-    >>> client = MCPToolClient("http://localhost:8000")
-    >>> tools = client.list_tools()
-    >>> result = client.call_tool("review_document", name="arrest_report")
+    >>> while not obs.done:
+    ...     obs = env.step("Yes")
 """
 
-from .server.core.investigation_env import SylloGymEnv
-from .server.core.judge_environment import JudgeAction, JudgeObservation
-from .judge_env import JudgeEnv, JudgeObs
+from .server.core.judge_environment import JudgeAction, JudgeObservation, JudgeEnvironment
+from .judge_env import JudgeEnv as LocalJudgeEnv, JudgeObs
 from .models import SylloState
 
-__all__ = ["SylloGymEnv", "JudgeEnv", "JudgeObs", "JudgeAction", "JudgeObservation", "SylloState"]
+__all__ = [
+    "JudgeAction",
+    "JudgeObservation",
+    "JudgeEnvironment",
+    "LocalJudgeEnv",
+    "JudgeObs",
+    "SylloState",
+]
