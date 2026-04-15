@@ -55,9 +55,9 @@ hf_article/                 Blog post + evaluation figures
 ### Run a local episode (no server)
 
 ```python
-from syllogym_env import JudgeEnv
+from syllogym_env import LocalJudgeEnv
 
-env = JudgeEnv(seed=42)
+env = LocalJudgeEnv(seed=42)
 obs = env.reset(task_name="diversity_3")
 
 while not obs.done:
@@ -72,28 +72,31 @@ while not obs.done:
 ### Connect to the hosted environment
 
 ```python
-from syllogym_env import SylloGymEnv, SylloAction
+import asyncio
+from syllogym_env import JudgeAction, JudgeEnvironment
 
-env = SylloGymEnv(base_url="https://farffadet-syllogym-env.hf.space")
-env.connect()
+async def main():
+    async with JudgeEnvironment(base_url="https://farffadet-syllogym-env.hf.space") as env:
+        result = await env.reset()
+        obs = result.observation
 
-result = env.reset(task_mode="mixed")
-obs = result.observation
+        while not obs.done:
+            result = await env.step(JudgeAction(
+                reasoning="Applying the rule step by step...",
+                answer=obs.valid_answers[0],
+            ))
+            obs = result.observation
 
-while not obs.done:
-    result = env.step(SylloAction(
-        reasoning="Applying the rule step by step...",
-        answer=obs.valid_answers[0],
-    ))
-    obs = result.observation
-
-env.disconnect()
+asyncio.run(main())
 ```
 
 ### Install the package
 
 ```bash
-pip install openenv-core>=0.2.1
+# From the HF Space (recommended)
+pip install git+https://huggingface.co/spaces/farffadet/syllogym-env
+
+# From source
 pip install "git+https://github.com/eliot-gtn/syllogym.git#subdirectory=envs/syllogym_env"
 ```
 
